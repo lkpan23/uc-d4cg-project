@@ -63,7 +63,7 @@ resource "aws_lambda_function" "cron_lambda_function" {
   s3_bucket                      = aws_s3_bucket.lambda_bucket.id
   s3_key                         = aws_s3_object.lambda_bucket_object.key
   role                           = aws_iam_role.lambda_role.arn
-  handler                        = "lambda_function.lambda_handler"
+  handler                        = "log-event-function.lambda_handler"
   runtime                        = "python3.12"
   timeout                        = 60
   memory_size                    = 128
@@ -75,7 +75,7 @@ resource "aws_lambda_function" "cron_lambda_function" {
 
 data "archive_file" "lambda_package" {
   type        = "zip"
-  source_dir  = "${path.module}/src/lambda-cron"
+  source_dir  = "${path.module}/src/lambda_function"
   output_path = "${path.module}/lambda_function_package.zip"
 }
 
