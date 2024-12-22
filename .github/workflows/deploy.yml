@@ -1,0 +1,114 @@
+name: Terraform Deploy AWS Cron Lambda
+
+on:
+  push:
+    branches:
+      - main  # Run apply on push to main branch
+  workflow_dispatch:
+    inputs:
+      action:
+        description: 'Select Terraform Action to Perform'
+        required: true
+        default: 'apply'
+        type: choice
+        options:
+          - apply
+          - destroy
+
+jobs:
+  apply:
+    name: Terraform Apply on Condition
+    runs-on: ubuntu-latest
+    if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/main') || (github.event_name == 'workflow_dispatch' && github.event.inputs.action == 'apply') }}
+
+    env:
+      TF_WORKING_DIR: /home/runner/work/uc-d4cg-project/uc-d4cg-project/terraform
+      AWS_REGION: ${{ secrets.AWS_REGION }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: latest
+
+      - name: Terraform Init
+        id: init
+        run: |
+          pwd
+          terraform init \
+            -backend-config="bucket=${{ secrets.TF_STATE_BUCKET_NAME }}" \
+            -backend-config="key=${{ secrets.TF_STATE_KEY }}" \
+            -backend-config="region=${{ secrets.AWS_REGION }}" \
+        working-directory: ${{ env.TF_WORKING_DIR }}
+
+      - name: Terraform Plan
+        id: plan
+        run: |
+          terraform plan \
+            -var-file=./configurations/lambda-deploy.tfvars \
+            -out=${{ env.TF_WORKING_DIR }}/lambda-deploy.tfplan
+        working-directory: ${{ env.TF_WORKING_DIR }}
+
+      - name: Terraform Apply
+        id: apply
+        run: |
+          terraform apply \
+            -auto-approve ${{ env.TF_WORKING_DIR }}/lambda-deploy.tfplan
+        working-directory: ${{ env.TF_WORKING_DIR }}
+
+  destroy:
+    name: Terraform Destroy on Manual Trigger
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.action == 'destroy'
+
+    env:
+      TF_WORKING_DIR: /home/runner/work/uc-d4cg-project/uc-d4cg-project/terraform
+      AWS_REGION: ${{ secrets.AWS_REGION }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: latest
+
+      - name: Terraform Init
+        id: init
+        run: |
+          terraform init \
+            -backend-config="bucket=${{ secrets.TF_STATE_BUCKET_NAME }}" \
+            -backend-config="key=${{ secrets.TF_STATE_KEY }}" \
+            -backend-config="region=${{ secrets.AWS_REGION }}" \
+        working-directory: ${{ env.TF_WORKING_DIR }}
+
+      - name: Terraform Plan Destroy
+        id: plan
+        run: |
+          terraform plan -destroy \
+            -var-file=./configurations/lambda-deploy.tfvars \
+            -out=destroy_lambda-deploy.tfplan
+        working-directory: ${{ env.TF_WORKING_DIR }}
+
+      - name: Terraform Apply Destroy
+        id: apply
+        run: terraform apply -destroy -auto-approve destroy_lambda-deploy.tfplan
+        working-directory: ${{ env.TF_WORKING_DIR }}
