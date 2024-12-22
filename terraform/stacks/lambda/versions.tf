@@ -1,9 +1,9 @@
 terraform {
   required_version = ">= 1.9"
   backend "s3" {
-    # bucket = "cron-lambda-terraform-state-s3-bucket"
+    # bucket = "uc-d4cg-terraform-state-s3-backend"
     # key    = "lambda-cron/terraform.tfstate"
-    # region = "us-east-1"
+    # region = var.aws_region
   }
 
   required_providers {

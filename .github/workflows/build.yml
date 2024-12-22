@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      TF_WORKING_DIR: /home/runner/work/job-search-project/job-search-project
+      TF_WORKING_DIR: /home/runner/work/uc-d4cg-project/uc-d4cg-project/terraform/stacks/lambda
       AWS_REGION: ${{ secrets.AWS_REGION }}
 
     steps:
