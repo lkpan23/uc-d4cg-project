@@ -16,7 +16,11 @@ data "aws_iam_policy_document" "lambda_permissions_policy" {
     actions = [
       "logs:CreateLogGroup",
       "logs:CreateLogStream",
-      "logs:PutLogEvents"
+      "logs:PutLogEvents",
+      "logs:DescribeLogStreams",
+      "logs:DescribeLogGroups",
+      "logs:DeleteLogGroup",
+      "logs:DeleteLogStream"
     ]
     resources = ["arn:aws:logs:*:*:*"]
   }
@@ -25,7 +29,11 @@ data "aws_iam_policy_document" "lambda_permissions_policy" {
     actions = [
       "s3:GetObject",
       "s3:PutObject",
-      "s3:ListBucket"
+      "s3:ListBucket",
+      "s3:DeleteObject",
+      "s3:GetObjectVersion",
+      "s3:PutBucketObjectLockConfiguration",
+      "s3:GetBucketObjectLockConfiguration"
     ]
     resources = [
       aws_s3_bucket.lambda_bucket.arn,

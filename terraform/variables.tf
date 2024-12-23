@@ -34,3 +34,21 @@ variable "s3_bucket_name" {
   type        = string
   default     = "lambda-code-bucket"
 }
+
+variable "s3_bucket_versioning_status" {
+  description = "The versioning status of the S3 bucket"
+  type        = string
+  default     = "Enabled"
+}
+
+variable "kms_key_deletion_window_in_days" {
+  description = "The number of days before the KMS key is deleted."
+  type        = number
+  default     = 7
+}
+
+variable "bucket_object_lock_configuration_days" {
+  description = "The number of days to retain the object in the bucket."
+  type        = number
+  default     = 5
+}
