@@ -1,7 +1,7 @@
 # KMS Key for S3 Bucket Encryption
 resource "aws_kms_key" "lambda_bucket_key" {
   description             = "KMS key for S3 bucket encryption"
-  deletion_window_in_days = 10
+  deletion_window_in_days = var.kms_key_deletion_window_in_days
 }
 
 # S3 Bucket for Lambda Code
@@ -34,9 +34,25 @@ resource "aws_s3_bucket_versioning" "lambda_bucket_versioning" {
   bucket = aws_s3_bucket.lambda_bucket.id
 
   versioning_configuration {
-    status = "Disabled"
+    status = var.s3_bucket_versioning_status
   }
 }
+# S3 Object Lock can help prevent Amazon S3 objects from being deleted or overwritten
+# for a fixed amount of time or indefinitely.
+# You can use Object Lock to help meet regulatory requirements that require write-once-read-many (WORM) storage,
+# or to add another layer of protection against object changes or deletion.
+# Only uncomment the following block if you need to enable Object Lock for the S3 bucket.
+
+# resource "aws_s3_bucket_object_lock_configuration" "lambda_bucket_object_lock_config" {
+#   bucket = aws_s3_bucket.lambda_bucket.id
+
+#   rule {
+#     default_retention {
+#       mode = "COMPLIANCE"
+#       days = 1
+#     }
+#   }
+# }
 
 # Upload Lambda Code to S3
 resource "aws_s3_object" "lambda_bucket_object" {

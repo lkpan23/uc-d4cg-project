@@ -1,4 +1,4 @@
-name: Terraform Deploy AWS Cron Lambda
+name: Terraform AWS Cron Lambda Deploy
 
 on:
   push:
