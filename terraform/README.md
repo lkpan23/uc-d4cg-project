@@ -11,7 +11,7 @@
 | Name | Version |
 |------|---------|
 | <a name="provider_archive"></a> [archive](#provider\_archive) | 2.7.0 |
-| <a name="provider_aws"></a> [aws](#provider\_aws) | 5.81.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 5.82.2 |
 
 ## Modules
 
@@ -42,11 +42,14 @@ No modules.
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_aws_region"></a> [aws\_region](#input\_aws\_region) | The AWS region to deploy the resources | `string` | `"us-east-1"` | no |
+| <a name="input_bucket_object_lock_configuration_days"></a> [bucket\_object\_lock\_configuration\_days](#input\_bucket\_object\_lock\_configuration\_days) | The number of days to retain the object in the bucket. | `number` | `5` | no |
 | <a name="input_cw_event_rule_name"></a> [cw\_event\_rule\_name](#input\_cw\_event\_rule\_name) | The name of the CloudWatch Event Rule | `string` | `"lambda_cron_event_rule"` | no |
 | <a name="input_iam_policy_name"></a> [iam\_policy\_name](#input\_iam\_policy\_name) | The name of the IAM policy | `string` | `"lambda_permissions_policy"` | no |
 | <a name="input_iam_role_name"></a> [iam\_role\_name](#input\_iam\_role\_name) | The name of the IAM role to create for the Lambda function | `string` | `"lambda_execution_role"` | no |
+| <a name="input_kms_key_deletion_window_in_days"></a> [kms\_key\_deletion\_window\_in\_days](#input\_kms\_key\_deletion\_window\_in\_days) | The number of days before the KMS key is deleted. | `number` | `7` | no |
 | <a name="input_lambda_function_name"></a> [lambda\_function\_name](#input\_lambda\_function\_name) | The name of the Lambda function | `string` | `"cron_lambda_function"` | no |
 | <a name="input_s3_bucket_name"></a> [s3\_bucket\_name](#input\_s3\_bucket\_name) | Name of the S3 bucket to create | `string` | `"lambda-code-bucket"` | no |
+| <a name="input_s3_bucket_versioning_status"></a> [s3\_bucket\_versioning\_status](#input\_s3\_bucket\_versioning\_status) | The versioning status of the S3 bucket | `string` | `"Enabled"` | no |
 
 ## Outputs
 
