@@ -1,4 +1,4 @@
-# Job Search Project
+# University of Chicago, Data for the Common Good (D4CG) Project
 
 This project sets up an AWS Lambda function triggered by a CloudWatch Event Rule (cron job) using Terraform. The Lambda function code is stored in an S3 bucket, and the necessary IAM roles and policies are created to allow the Lambda function to execute and interact with AWS services.
 
@@ -23,7 +23,7 @@ This project sets up an AWS Lambda function triggered by a CloudWatch Event Rule
 
     ```sh
     git clone <repository-url>
-    cd job-search-project
+    cd uc-d4cg-project
     ```
 
 2. **Initialize Terraform:**
